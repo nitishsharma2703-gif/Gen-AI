@@ -25,29 +25,67 @@ function BoyModel() {
     if (ref.current) ref.current.rotation.y += 0.005;
   });
   return (
-    <group ref={ref} position={[0, -1, 0]} scale={1.2}>
+   <group ref={ref} position={[0, -1, 0]} scale={1.2}>
+      {/* Head */}
       <mesh position={[0, 1.5, 0]}>
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshStandardMaterial color="#E8B4A4" />
       </mesh>
+
+      {/* Eyes */}
+      <mesh position={[-0.15, 1.55, 0.45]}>
+        <sphereGeometry args={[0.06, 16, 16]} />
+        <meshStandardMaterial color="#fff" />
+      </mesh>
+      <mesh position={[-0.15, 1.55, 0.48]}>
+        <sphereGeometry args={[0.025, 16, 16]} />
+        <meshStandardMaterial color="#000" />
+      </mesh>
+
+      <mesh position={[0.15, 1.55, 0.45]}>
+        <sphereGeometry args={[0.06, 16, 16]} />
+        <meshStandardMaterial color="#fff" />
+      </mesh>
+      <mesh position={[0.15, 1.55, 0.48]}>
+        <sphereGeometry args={[0.025, 16, 16]} />
+        <meshStandardMaterial color="#000" />
+      </mesh>
+
+      {/* Mouth */}
+      <mesh position={[0, 1.45, 0.45]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.08, 0.08, 0.02, 16]} />
+        <meshStandardMaterial color="#900" />
+      </mesh>
+
+      {/* Hair */}
+      <mesh position={[0, 1.65, 0]}>
+        <sphereGeometry args={[0.52, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color="#2D2D2D" />
+      </mesh>
+
+      {/* Body */}
       <mesh position={[0, 0.8, 0]}>
         <boxGeometry args={[0.6, 1, 0.4]} />
         <meshStandardMaterial color="#3B82F6" />
       </mesh>
+
+      {/* Arms */}
       <mesh position={[-0.5, 1, 0]}>
-        <boxGeometry args={[0.3, 0.8, 0.25]} />
+        <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
         <meshStandardMaterial color="#E8B4A4" />
       </mesh>
       <mesh position={[0.5, 1, 0]}>
-        <boxGeometry args={[0.3, 0.8, 0.25]} />
+        <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
         <meshStandardMaterial color="#E8B4A4" />
       </mesh>
+
+      {/* Legs */}
       <mesh position={[-0.2, 0, 0]}>
-        <boxGeometry args={[0.25, 0.8, 0.3]} />
+        <cylinderGeometry args={[0.15, 0.15, 0.8, 16]} />
         <meshStandardMaterial color="#2D3748" />
       </mesh>
       <mesh position={[0.2, 0, 0]}>
-        <boxGeometry args={[0.25, 0.8, 0.3]} />
+        <cylinderGeometry args={[0.15, 0.15, 0.8, 16]} />
         <meshStandardMaterial color="#2D3748" />
       </mesh>
     </group>
@@ -96,7 +134,7 @@ function LeftPanel({
         </Canvas>
       </div>
 
-      <div className="relative z-10 h-full flex flex-col justify-between bg-black/40 backdrop-blur-xl border-r border-cyan-400/10">
+      <div className="relative z-10 h-full flex flex-col justify-between bg-black/40 border-r border-cyan-400/10">
         <div className="p-3 space-y-3">
           <SideMenuItem
             icon={<PlusSquare size={18} />}
