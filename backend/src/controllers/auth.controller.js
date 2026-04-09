@@ -12,70 +12,66 @@ import tokenBlacklistModel from "../models/blacklist.model.js";
  * @access Public
  */
 export const registerUserController = async (req, res) => {
-    try{
-        const {username, email, password} = req.body;
-        
-        //madatory username, email and password 📌
-        if(!username || !email || !password) {
-            return res.status(400).json({
-                message: "Please provide username, email and password"
-            })
-        };
-        
-        //Check User already Exit 👱‍♂️
-        const userAlreadyExit = await userModel.findOne({
-            $or: [
-                {username},
-                {email}
-            ]
-        });
+  try {
+    const { username, email, password } = req.body;
 
-        if(userAlreadyExit.username === username || userAlreadyExit.email === email){
-            return res.status(400).json({
-                message: "User already exist with this email or username"
-            })
+    // ✅ Validation
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        message: "Please provide username, email and password"
+      });
+    }
 
-        };
+    // ✅ Check existing user
+    const userAlreadyExit = await userModel.findOne({
+      $or: [{ username }, { email }]
+    });
 
-        // Password Convert Hash 💎
-        const hashedPassword = await bcrypt.hash(password, 10);
+    if (userAlreadyExit) {
+      return res.status(400).json({
+        message: "User already exist with this email or username"
+      });
+    }
 
-        // create User 🧘‍♂️
-        const newUser = await userModel.create({
-            username,
-            email,
-            password: hashedPassword // Hash 🥢
-        });
-        
-        // Genrate Token 📀
-        const token = jwt.sign(
-            {id: newUser._id, username: newUser.username},
-            process.env.JWT_SECRET,
-            {expiresIn: "1d"}
-        )
+    // ✅ Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Token Store in Cookie 🍪
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            maxAge: 24 * 60 * 60 * 1000 // 1 day 🌻
-        });
+    // ✅ Create user
+    const newUser = await userModel.create({
+      username,
+      email,
+      password: hashedPassword
+    });
 
-        res.status(201).json({
-            message: "User created successfully✅",
-            user:{
-                id: newUser._id,
-                username: newUser.username,
-                email: newUser.email
-            }
-        })
+    // ✅ Generate token
+    const token = jwt.sign(
+      { id: newUser._id, username: newUser.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-    }catch(error){
-        res.status(500).json({
-            message: error.message
-        })
-    }   
+    // ⚠️ IMPORTANT FIX FOR LOCALHOST
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // ❗ CHANGE THIS (important for localhost)
+      sameSite: "lax", // ❗ change from strict
+      maxAge: 24 * 60 * 60 * 1000
+    });
+
+    res.status(201).json({
+      message: "User created successfully ✅",
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
 };
 
 /**

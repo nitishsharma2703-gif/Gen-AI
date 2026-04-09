@@ -19,18 +19,25 @@ export const useAuth = () => {
     }
   };
 
-  // ✅ REGISTER
-  const handleRegister = async ({ username, email, password }) => {
-    try {
-      setLoading(true);
-      const data = await register({ username, email, password });
-      setUser(data.user);
-    } catch (error) {
-      console.error("Register Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleRegister = async ({ username, email, password }) => {
+  try {
+    setLoading(true);
+
+    const data = await register({ username, email, password });
+
+    setUser(data.user);
+
+    return data; // ✅ THIS FIXES YOUR FLOW
+
+  } catch (error) {
+    console.error("Register Error:", error);
+
+    throw error; // ✅ THIS LETS UI HANDLE ERROR
+
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ✅ LOGOUT
   const handleLogout = async () => {

@@ -24,15 +24,18 @@ api.interceptors.response.use(
 
 // ✅ Register
 export const register = async ({ username, email, password }) => {
-  const { data } = await api.post("/api/auth/register", {
+  console.log("Sending register request...");
+
+  const response = await api.post("/api/auth/register", {
     username,
     email,
     password,
   });
 
-  return data;
-};
+  console.log("FULL RESPONSE 👉", response);
 
+  return response.data;
+};
 // ✅ Login
 export const login = async ({ email, password }) => {
   const { data } = await api.post("/api/auth/login", {
@@ -53,4 +56,12 @@ export const logout = async () => {
 export const getMe = async () => {
   const { data } = await api.get("/api/auth/get-me");
   return data;
+};
+
+export const generateAI = async (prompt) => {
+  const { data } = await api.post("/api/ai/generate", { prompt });
+
+  console.log("FULL API RESPONSE 👉", data); // 👈 see exact structure
+
+  return data; // ✅ RETURN COMPLETE RESPONSE
 };

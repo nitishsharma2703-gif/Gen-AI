@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 
 const teechnicalQuestionSchema = new mongoose.Schema({
@@ -102,6 +102,11 @@ const interviewReportSchema = new mongoose.Schema({
     skillGapSchema: [skillGapSchema],
 
     preparationPlanSchema: [preparationPlanSchema], 
+
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+    }
 
 },{
     timestamps: true
