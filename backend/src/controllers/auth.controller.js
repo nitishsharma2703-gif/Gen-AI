@@ -41,19 +41,19 @@ export const registerUserController = async (req, res) => {
       username,
       email,
       password: hashedPassword
-    });
+        });
 
-    // ✅ Generate token
-    const token = jwt.sign(
-      { id: newUser._id, username: newUser.username },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+        // ✅ Generate token
+        const token = jwt.sign(
+        { id: newUser._id, username: newUser.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+        );
 
-    // ⚠️ IMPORTANT FIX FOR LOCALHOST
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false, // ❗ CHANGE THIS (important for localhost)
+        // ⚠️ IMPORTANT FIX FOR LOCALHOST
+        res.cookie("token", token, {
+        httpOnly: true,
+        secure: false, // ❗ CHANGE THIS (important for localhost)
       sameSite: "lax", // ❗ change from strict
       maxAge: 24 * 60 * 60 * 1000
     });

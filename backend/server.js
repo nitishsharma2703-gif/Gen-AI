@@ -10,6 +10,7 @@ console.log(
   })
 );
 
+
 import app from "./src/app.js";
 import connectToDB from "./src/config/database.js";
 import  { generateResult } from "./src/services/ai.service.js";

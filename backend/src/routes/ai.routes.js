@@ -5,7 +5,7 @@ import { generateResult } from "../services/ai.service.js";
 const router = express.Router();
 
 // ✅ Use POST (correct for sending data)
-router.post("/generate", authMiddleware.authUser, aiController.generateAiController);
+router.post("/generate", aiController.generateAiController);
 
 export default router;
 

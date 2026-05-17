@@ -247,13 +247,15 @@ export default function MergedPage() {
   useEffect(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
 
   // Store messages per chat
-  useEffect(() => {
-    if (activeChat !== null) {
-      const updatedStore = [...messagesStore];
-      updatedStore[activeChat] = messages;
-      setMessagesStore(updatedStore);
-    }
-  }, [messages, activeChat]);
+ useEffect(() => {
+  if (activeChat === null) return;
+
+  setMessagesStore((prev) => {
+    const updatedStore = [...prev];
+    updatedStore[activeChat] = messages;
+    return updatedStore;
+  });
+}, [messages, activeChat]);
 
   // File upload
   const handleFileUpload = async (e) => {

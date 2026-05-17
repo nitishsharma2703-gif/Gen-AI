@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+
 import Model3D from "./Model3D";
-import Chat3D from "./chat";
+
 
 export default function SplitView() {
   return (

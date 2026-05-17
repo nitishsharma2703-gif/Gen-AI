@@ -8,9 +8,8 @@ const openrouter = new OpenRouter({
 });
 
 const MODELS = [
-  // "openai/gpt-5.2",
-  // "mistralai/mistral-7b-instruct",
-  // "stepfun/step-3.5-flash:free", 
+  "openai/gpt-5.2",
+  "stepfun/step-3.5-flash:free", 
   "nvidia/nemotron-3-super-120b-a12b:free",
   "arcee-ai/trinity-large-preview:free",
   "z-ai/glm-4.5-air:free",
@@ -32,8 +31,6 @@ const MODELS = [
   "google/gemma-3-27b-it:free",
   "google/gemma-3-27b-it:free",
   
-
-
 ];
 
 export const generateResult = async (prompt) => {
