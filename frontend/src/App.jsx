@@ -6,7 +6,7 @@ import Register from "./routes/register";
 import Protected from "./compounds/protected";
 import SplitView from "./components/SplitView";
 import Hero3D from "./routes/hero3D";
-import NewModal from "./components/NewModal";
+
 
 const App = () => {
   return (
@@ -27,7 +27,6 @@ const App = () => {
 
         <Route path="/" element={<Hero3D />} />
 
-        <Route path="/newmodal" element={<NewModal />} />
       </Routes>
     </div>
   );
