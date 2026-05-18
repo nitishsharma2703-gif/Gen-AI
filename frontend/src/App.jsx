@@ -1,12 +1,12 @@
 import React from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route } from "react-router-dom";
 
 import Login from "./routes/login";
 import Register from "./routes/register";
 import Protected from "./compounds/protected";
 import SplitView from "./components/SplitView";
 import Hero3D from "./routes/hero3D";
-import NewModal from "./components/NewModal.jsx";
+import NewModal from "./components/NewModal";
 
 const App = () => {
   return (
