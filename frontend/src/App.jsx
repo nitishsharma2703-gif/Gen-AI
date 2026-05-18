@@ -5,7 +5,8 @@ import Register from "./routes/register";
 import Protected from "./compounds/protected";
 import SplitView from "./components/SplitView";
 import Hero3D from "./routes/hero3D";
-import BoyTest from "./routes/boytest";
+import NewModal from "./components/NewModal";
+
 
 
 // Home page now uses SplitView with animations
@@ -18,8 +19,9 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/s" element={<Protected><h1>Welcome to the App</h1></Protected>} />
         <Route path="/" element={<Hero3D />} />
+        <Route path="/newmodal" element={<NewModal />} />
         
-        <Route path="/boytest" element={<BoyTest />} />
+      
       </Routes>
     </div>
   )

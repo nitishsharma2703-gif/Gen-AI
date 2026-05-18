@@ -293,7 +293,7 @@ export default function MergedPage() {
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`px-4 py-3 rounded-2xl max-w-md ${msg.role === "user" ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white" : "bg-black/40 border border-cyan-400/20"}`}>
+              <div className={`px-4 py-3 rounded-2xl max-w-md ${msg.role === "user" ? "bg-linear-to-r from-cyan-500 to-blue-500 text-white" : "bg-black/40 border border-cyan-400/20"}`}>
                 {msg.text}
               </div>
             </div>
@@ -328,7 +328,10 @@ export default function MergedPage() {
 
             <button
               onClick={handleSend}
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 px-4 rounded-lg"
+              className=".bg-gradient-to-r {
+    --tw-gradient-position: to right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+} from-cyan-500 to-blue-500 px-4 rounded-lg"
             >
               {loadingAI ? "..." : "➤"}
             </button>
