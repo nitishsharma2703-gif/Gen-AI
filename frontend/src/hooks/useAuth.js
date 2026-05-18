@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../compounds/authContext.jsx";
 import { login, register, logout, getMe } from "../services/auth.api.js"; // ✅ FIXED PATH

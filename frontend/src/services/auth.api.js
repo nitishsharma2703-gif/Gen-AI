@@ -4,7 +4,7 @@ import axios from "axios";
 
 // ✅ Create API instance
 const api = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "https://gen-ai-backend-o9ck.onrender.com",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

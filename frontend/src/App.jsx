@@ -6,6 +6,7 @@ import Register from "./routes/register";
 import Protected from "./compounds/protected";
 import SplitView from "./components/SplitView";
 import Hero3D from "./routes/hero3D";
+import Chat from "./components/ChatSystem"
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
         />
 
         <Route path="/" element={<Hero3D />} />
+        <Route path="/chat" element={<Chat />} />
 
       </Routes>
     </div>

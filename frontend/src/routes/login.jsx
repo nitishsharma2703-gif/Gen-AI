@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";// used for render page
 import { useAuth } from "../hooks/useAuth";
@@ -15,7 +16,7 @@ export default function Login() {
   e.preventDefault();
   try {
     await handleLogin({ email, password });
-    navigate("/boytest"); // only runs if success ✅
+    navigate("/chat"); // only runs if success ✅
   } catch (error) {
     console.log(error);
     alert("Login failed"); // or toast
