@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function Boy3D() {
   const navigate = useNavigate();
 
-  /* ---------------- LOGIN CHECK (LAZY STATE) ---------------- */
+  /* ---------------- FAST LOGIN CHECK (LAZY STATE INITIALIZER) ---------------- */
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     if (typeof window !== "undefined") {
       const user = localStorage.getItem("user");
@@ -15,7 +15,7 @@ export default function Boy3D() {
 
   const [showPopup, setShowPopup] = useState(false);
 
-  /* ---------------- START CHAT ---------------- */
+  /* ---------------- START CHAT CONTROLLER ---------------- */
   const handleStartChat = () => {
     if (!isLoggedIn) {
       setShowPopup(true);
@@ -24,17 +24,16 @@ export default function Boy3D() {
     navigate("/boytest");
   };
 
-  /* ---------------- LOGOUT ---------------- */
+  /* ---------------- INSTANT LOGOUT ---------------- */
   const handleLogout = () => {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
   };
 
   return (
-    // h-dvh se mobile browser address bar layout ko crash nahi karega
-    <div className="relative w-full h-dvh md:h-screen overflow-hidden bg-black text-white flex flex-col justify-between select-none">
+    <div className="relative w-full h-dvh md:h-screen overflow-hidden bg-black text-white flex flex-col justify-between">
 
-      {/* ---------------- VIDEO BACKGROUND (FIXED FOR MOBILE) ---------------- */}
+      {/* ---------------- FIXED BACKDROP VIDEO LAYER (BRIGHT & CRISP) ---------------- */}
       <div className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
         <video
           src="/images/car.mp4"
@@ -43,15 +42,16 @@ export default function Boy3D() {
           loop
           playsInline
           preload="metadata"
-          className="w-full h-full object-cover will-change-transform scale-100"
+          className="w-full h-full object-cover" 
         />
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+        {/* Dark overlay ko poora hata diya hai taaki video original brightness mein chamke */}
+        <div className="absolute inset-0 bg-transparent" />
       </div>
 
-      {/* ---------------- HEADER (TOP BAR) ---------------- */}
-      <header className="relative w-full flex justify-between items-center p-4 md:p-6 z-20 bg-linear-to-b from-black/90 to-transparent">
-        <div className="text-cyan-400 text-xs md:text-sm font-mono max-w-[55%] truncate">
-          <span>Solved AI is your assistant</span>
+      {/* ---------------- TOP GLOBAL HEADER ---------------- */}
+      <header className="relative w-full flex justify-between items-center p-4 md:p-6 z-20 bg-gradient-to-b from-black/70 to-transparent">
+        <div className="text-cyan-300 text-xs md:text-sm font-mono max-w-[50%] truncate md:whitespace-normal [text-shadow:1px_1px_4px_rgba(0,0,0,0.8)]">
+          <p>Solved AI is your AI chatbot...</p>
         </div>
 
         <div className="flex gap-2">
@@ -59,14 +59,14 @@ export default function Boy3D() {
             <>
               <button
                 onClick={() => navigate("/login")}
-                className="px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-white transition active:scale-95 cursor-pointer"
+                className="px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-lg bg-black/40 hover:bg-black/60 border border-white/30 text-white backdrop-blur-xs transition active:scale-95 cursor-pointer shadow-lg"
               >
                 Login
               </button>
 
               <button
                 onClick={() => navigate("/register")}
-                className="px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white transition active:scale-95 cursor-pointer"
+                className="px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white transition active:scale-95 cursor-pointer shadow-lg shadow-cyan-500/20"
               >
                 Register
               </button>
@@ -74,7 +74,7 @@ export default function Boy3D() {
           ) : (
             <button
               onClick={handleLogout}
-              className="px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-lg bg-red-500/90 hover:bg-red-600 text-white transition active:scale-95 cursor-pointer"
+              className="px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-lg bg-red-500 hover:bg-red-600 text-white transition active:scale-95 cursor-pointer shadow-lg"
             >
               Logout
             </button>
@@ -82,76 +82,75 @@ export default function Boy3D() {
         </div>
       </header>
 
-      {/* ---------------- MAIN CONTENT AREA (MOBILE OPTIMIZED SCROLL) ---------------- */}
-      <main className="relative flex-1 w-full flex flex-col md:flex-row items-center justify-between px-5 md:px-16 gap-6 z-10 overflow-y-auto pt-4 pb-28 md:py-0 no-scrollbar">
+      {/* ---------------- MAIN MOBILE-RESPONSIVE FLOW CONTROLLER ---------------- */}
+      <main className="relative flex-1 w-full flex flex-col md:flex-row items-center justify-center md:justify-between px-6 md:px-16 gap-8 z-10 overflow-y-auto no-scrollbar pb-28 md:pb-0">
         
-        {/* LEFT TEXT (WELCOME) */}
-        <div className="text-center md:text-left space-y-1 md:space-y-2 mt-4 md:mt-0 w-full md:w-auto">
-          <h1 className="text-lg md:text-4xl text-cyan-400 font-medium tracking-wide">Welcome to</h1>
-          <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-cyan-100 to-cyan-400">
+        {/* LEFT BRAND SECTION */}
+        <div className="text-center md:text-left space-y-1 w-full md:w-auto [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
+          <h1 className="text-lg md:text-4xl text-cyan-400 font-semibold tracking-wide">Welcome to</h1>
+          <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-cyan-300">
             Solved AI
           </h2>
-          <p className="text-sm md:text-xl text-cyan-200/80 font-light">🤖 Easy & Fast Solution</p>
+          <p className="text-sm md:text-xl text-white font-medium mt-1">🤖 Easy & Fast Solution</p>
         </div>
 
-        {/* RIGHT ANIMATED TEXT PANELS */}
-        <div className="w-full max-w-sm space-y-3 px-1">
+        {/* RIGHT CAROUSEL ANIMATION AREA */}
+        <div className="w-full max-w-[340px] space-y-3 relative h-36 md:h-48">
 
-          <div className="animate-loop bg-slate-950/40 border border-cyan-500/20 rounded-xl p-3.5 backdrop-blur-md shadow-lg shadow-cyan-950/10">
-            <p className="text-xs md:text-sm text-cyan-50/90 leading-relaxed">
-              Solved AI, you can communicate and ask questions directly with a powerful AI system that helps you find information, answer questions, and provide solutions.
+          {/* Backgrounds ko thoda zyada glassmorphic kar diya hai taaki piche ki bright video par bhi text clear padha jaye */}
+          <div className="animate-loop absolute inset-x-0 bg-slate-950/60 border border-cyan-400/30 rounded-xl p-4 backdrop-blur-md shadow-2xl">
+            <p className="text-xs md:text-sm text-white font-medium leading-relaxed">
+              With Solved AI, you can communicate and ask questions directly with a powerful AI system that helps you find information and provide solutions to complex problems.
             </p>
           </div>
 
-          <div className="animate-loop bg-slate-950/40 border border-cyan-500/20 rounded-xl p-3.5 backdrop-blur-md shadow-lg shadow-cyan-950/10" style={{ animationDelay: "2.5s" }}>
-            <p className="text-xs md:text-sm text-cyan-50/90 leading-relaxed">
-              Natural Chat: Chatbot AI uses advanced natural language technology to understand and respond to your requests in a natural, fluid and intuitive way.
+          <div className="animate-loop absolute inset-x-0 bg-slate-950/60 border border-cyan-400/30 rounded-xl p-4 backdrop-blur-md shadow-2xl" style={{ animationDelay: "2s" }}>
+            <p className="text-xs md:text-sm text-white font-medium leading-relaxed">
+              Natural Chat: Chatbot AI uses advanced natural language technology to understand and respond to your questions and requests in a natural and intuitive way.
             </p>
           </div>
 
-          <div className="animate-loop bg-slate-950/40 border border-cyan-500/20 rounded-xl p-3.5 backdrop-blur-md shadow-lg shadow-cyan-950/10" style={{ animationDelay: "5s" }}>
-            <p className="text-xs md:text-sm text-cyan-50/90 leading-relaxed">
-              Chatbot AI is an intelligent artificial intelligence interactive application that brings a unique and convenient experience to modern users.
+          <div className="animate-loop absolute inset-x-0 bg-slate-950/60 border border-cyan-400/30 rounded-xl p-4 backdrop-blur-md shadow-2xl" style={{ animationDelay: "4s" }}>
+            <p className="text-xs md:text-sm text-white font-medium leading-relaxed">
+              Chatbot AI is an intelligent artificial intelligence interactive application that brings a unique and convenient experience to users.
             </p>
           </div>
 
-          <div className="bg-cyan-500/10 border border-cyan-400/30 rounded-xl p-2.5 backdrop-blur-sm">
-            <p className="text-[11px] md:text-xs text-cyan-300 font-mono text-center">
-              💡 Tip: Click “Start Chat” button below to begin...
+          <div className="animate-loop absolute inset-x-0 bg-cyan-950/80 border border-cyan-400/50 rounded-xl p-3 backdrop-blur-md shadow-2xl" style={{ animationDelay: "6s" }}>
+            <p className="text-xs text-cyan-300 font-bold font-mono text-center">
+              💡 Tip: Click “Start Chat” below to begin...
             </p>
           </div>
 
         </div>
       </main>
 
-      {/* ---------------- START BUTTON (STICKY FOOTER HUB) ---------------- */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-linear-to-t from-black via-black/80 to-transparent pt-8 pb-6 text-center pointer-events-none">
-        <div className="inline-block pointer-events-auto">
-          <button
-            onClick={handleStartChat}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3.5 rounded-full text-base font-bold shadow-xl shadow-purple-600/40 hover:scale-105 active:scale-95 transition duration-200 whitespace-nowrap cursor-pointer tracking-wide"
-          >
-            🚀 Start Chat
-          </button>
-        </div>
+      {/* ---------------- FIXED BOTTOM ACTION BAR ---------------- */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-20 w-auto">
+        <button
+          onClick={handleStartChat}
+          className="bg-purple-600 hover:bg-purple-700 text-white px-10 py-3.5 rounded-full text-base font-bold shadow-xl shadow-black/50 hover:scale-105 active:scale-95 transition-all duration-200 whitespace-nowrap cursor-pointer tracking-wide"
+        >
+          🚀 Start Chat
+        </button>
       </div>
 
-      {/* ---------------- CENTER POPUP ---------------- */}
+      {/* ---------------- LOGIN AUTH REQUIRED POPUP ---------------- */}
       {showPopup && (
         <div
           onClick={() => setShowPopup(false)}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-5"
+          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl animate-popup"
+            className="bg-slate-950 border border-white/10 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl animate-popup"
           >
-            <h2 className="text-xl font-bold text-white mb-2 flex items-center justify-center gap-2">
+            <h2 className="text-xl font-bold text-white mb-2">
               🔐 Login Required
             </h2>
 
-            <p className="text-xs md:text-sm text-gray-300 mb-6 leading-normal">
-              Please login first to access the AI chat assistance system 💙
+            <p className="text-xs text-gray-300 mb-5">
+              Please login first to start chatting 💙
             </p>
 
             <div className="flex flex-col gap-2">
@@ -160,14 +159,14 @@ export default function Boy3D() {
                   setShowPopup(false);
                   navigate("/login");
                 }}
-                className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2.5 rounded-xl transition text-sm cursor-pointer"
+                className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium py-2.5 rounded-lg transition cursor-pointer shadow-md"
               >
                 Go to Login
               </button>
 
               <button
                 onClick={() => setShowPopup(false)}
-                className="bg-white/5 hover:bg-white/10 text-gray-400 text-xs py-2 rounded-xl transition cursor-pointer"
+                className="bg-white/5 hover:bg-white/10 text-gray-400 text-xs py-2 rounded-lg transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -176,18 +175,18 @@ export default function Boy3D() {
         </div>
       )}
 
-      {/* ---------------- ANIMATION & CUSTOM SCROLL UTILITIES ---------------- */}
+      {/* ---------------- CLEAN SCROLLBARS & SMOOTH KEYFRAMES ---------------- */}
       <style>{`
         @keyframes fadeLoop {
-          0% { opacity: 0; transform: translateY(10px); }
+          0% { opacity: 0; transform: translateY(15px); }
           5% { opacity: 1; transform: translateY(0); }
-          30% { opacity: 1; }
-          35% { opacity: 0; transform: translateY(-10px); }
+          25% { opacity: 1; }
+          30% { opacity: 0; transform: translateY(-15px); }
           100% { opacity: 0; }
         }
 
         .animate-loop {
-          animation: fadeLoop 7.5s infinite;
+          animation: fadeLoop 8s infinite;
           opacity: 0;
         }
 
@@ -200,15 +199,8 @@ export default function Boy3D() {
           animation: popupScale 0.15s ease-out;
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        /* Hide scrollbar for IE, Edge and Firefox */
-        .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
     </div>
