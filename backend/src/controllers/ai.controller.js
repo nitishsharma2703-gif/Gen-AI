@@ -1,23 +1,28 @@
 import { generateResult } from "../services/ai.service.js";
 
-export const generateAiController = async (req, res) => {
-  try {
-    const { prompt } = req.body;
+export const  generateAiController = async (prompt) => {
+  for (let model of MODELS) {
+    try {
+      console.log("Trying model:", model);
 
-    if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
+      // Timeout logic wrapper
+      const response = await Promise.race([
+        openrouter.chat.send({
+          chatGenerationParams: {
+            model,
+            messages: [{ role: "user", content: prompt }],
+          },
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Timeout")), 3500) // 3.5 seconds timeout
+        )
+      ]);
+
+      return response.choices[0].message.content;
+    } catch (error) {
+      console.log(`❌ Failed or Timed out with ${model}`);
+      // Turant agle model par jump karega bina wait kiye
     }
-
-    const result = await generateResult(prompt);
-
-    res.status(200).json({
-      success: true,
-      result,
-    });
-
-  } catch (error) {
-    console.error("Controller Error:", error.message);
-    res.status(500).json({ error: error.message });
   }
 };
 // export const generateInterviewReportController = async (req, res) => {

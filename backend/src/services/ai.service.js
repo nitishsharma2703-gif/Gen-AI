@@ -1,14 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-import { OpenRouter } from "@openrouter/sdk";
-
-const openrouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
-
-const MODELS = [
-  "openai/gpt-5.2",
+export const generateResult = async (prompt) => {
+  // Pehle 4-5 active aur fast free models ka subset bana lein
+  const fastModels = [
+     "openai/gpt-5.2",
   "stepfun/step-3.5-flash:free", 
   "nvidia/nemotron-3-super-120b-a12b:free",
   "arcee-ai/trinity-large-preview:free",
@@ -30,27 +23,36 @@ const MODELS = [
   "liquid/lfm-2.5-1.2b-instruct:free",
   "google/gemma-3-27b-it:free",
   "google/gemma-3-27b-it:free",
-  
-];
+  ];
 
-export const generateResult = async (prompt) => {
-  for (let model of MODELS) {
+  // Sabhi models ko ek saath fire karein (Racing)
+  const promises = fastModels.map(async (model) => {
     try {
-      console.log("Trying model:", model);
-
       const completion = await openrouter.chat.send({
         chatGenerationParams: {
           model,
           messages: [{ role: "user", content: prompt }],
         },
       });
-
-      return completion.choices[0].message.content;
-
-    } catch (error) {
-      console.log(`❌ Failed with ${model}`);
+      
+      if (completion?.choices?.[0]?.message?.content) {
+        return { model, content: completion.choices[0].message.content };
+      }
+      throw new Error("Empty response");
+    } catch (err) {
+      throw new Error(`Model ${model} failed`);
     }
-  }
+  });
 
-  
+  try {
+    // Jo sabse pehle resolve hoga, wo jeet jayega
+    const fastestResponse = await Promise.any(promises);
+    console.log(`⚡ Winner Model: ${fastestResponse.model}`);
+    return fastestResponse.content;
+  } catch (error) {
+    console.error("❌ Saare fast models fail ho gaye");
+    
+    // Fallback: Agar upar ke saare fail ho gaye, to bache hue models par normal loop chala lein
+    return "Error: Unable to get response from any model.";
+  }
 };
