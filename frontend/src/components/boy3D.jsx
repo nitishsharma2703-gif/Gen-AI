@@ -5,7 +5,6 @@ export default function Boy3D() {
   const navigate = useNavigate();
 
   /* ---------------- LOGIN CHECK (LAZY STATE) ---------------- */
-  // Fix: useEffect ko hata kar initial state mein hi check kar liya taaki cascading renders na hon
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     if (typeof window !== "undefined") {
       const user = localStorage.getItem("user");
@@ -34,20 +33,24 @@ export default function Boy3D() {
   return (
     <div className="relative w-full min-h-screen md:h-screen md:overflow-hidden bg-black text-white flex flex-col justify-between">
 
-      {/* ---------------- VIDEO BACKGROUND ---------------- */}
+      {/* ---------------- VIDEO BACKGROUND (OPTIMIZED) ---------------- */}
+      {/* 
+        1. preload="metadata" lagaya hai taaki poori video pehle hi download na ho, isse login/register click fast hoga.
+        2. Mobile par performance behtar karne ke liye 'will-change-transform' add kiya hai.
+      */}
       <video
         src="/images/car.mp4"
         autoPlay
         muted
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        preload="metadata"
+        className="absolute top-0 left-0 w-full h-full object-cover z-0 will-change-transform scale-100 max-sm:scale-95 transition-transform duration-500"
       />
-      <div className="absolute inset-0 bg-black/40 z-0" />
+      <div className="absolute inset-0 bg-black/50 z-0" />
 
       {/* ---------------- HEADER (TOP BAR) ---------------- */}
-      {/* Fix: Tailwind v4 ke mutabik bg-gradient-to-b ko bg-linear-to-b kiya hai */}
-      <header className="relative w-full flex justify-between items-center p-4 md:p-6 z-20 bg-linear-to-b from-black/60 to-transparent">
+      <header className="relative w-full flex justify-between items-center p-4 md:p-6 z-20 bg-linear-to-b from-black/80 to-transparent">
         <div className="text-cyan-400 text-xs md:text-sm font-mono max-w-[50%] md:max-w-xs">
           <p className="truncate md:whitespace-normal">Solved AI is your AI chatbot...</p>
         </div>
@@ -57,14 +60,14 @@ export default function Boy3D() {
             <>
               <button
                 onClick={() => navigate("/login")}
-                className="px-3 py-1.5 md:px-4 md:py-2 text-sm rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white transition cursor-pointer"
+                className="px-3 py-1.5 md:px-4 md:py-2 text-sm rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white transition transform active:scale-95 cursor-pointer"
               >
                 Login
               </button>
 
               <button
                 onClick={() => navigate("/register")}
-                className="px-3 py-1.5 md:px-4 md:py-2 text-sm rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white transition cursor-pointer"
+                className="px-3 py-1.5 md:px-4 md:py-2 text-sm rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white transition transform active:scale-95 cursor-pointer"
               >
                 Register
               </button>
@@ -72,7 +75,7 @@ export default function Boy3D() {
           ) : (
             <button
               onClick={handleLogout}
-              className="px-3 py-1.5 md:px-4 md:py-2 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition cursor-pointer"
+              className="px-3 py-1.5 md:px-4 md:py-2 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition transform active:scale-95 cursor-pointer"
             >
               Logout
             </button>
@@ -84,7 +87,6 @@ export default function Boy3D() {
       <main className="relative flex-1 w-full flex flex-col md:flex-row items-center justify-center md:justify-between px-6 md:px-16 gap-8 md:gap-4 z-10 my-auto pb-24 md:pb-0">
         
         {/* LEFT TEXT (WELCOME) */}
-        {/* Fix: Tailwind v4 ke mutabik bg-gradient-to-r ko bg-linear-to-r kiya hai */}
         <div className="text-center md:text-left space-y-2 max-w-md">
           <h1 className="text-xl md:text-4xl text-cyan-400 font-medium tracking-wide">Welcome to</h1>
           <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-cyan-200 to-cyan-400">
@@ -94,7 +96,6 @@ export default function Boy3D() {
         </div>
 
         {/* RIGHT ANIMATED TEXT */}
-        {/* Fix: Tailwind v4 ke mutabik max-w-[340px] ko max-w-85 kiya hai */}
         <div className="w-full max-w-85 space-y-3 md:space-y-4">
 
           <div className="animate-loop bg-white/5 border border-cyan-400/20 rounded-xl p-3 md:p-4 backdrop-blur-md">
@@ -140,7 +141,6 @@ export default function Boy3D() {
           onClick={() => setShowPopup(false)}
           className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         >
-          {/* Fix: Tailwind v4 ke mutabik max-w-[360px] ko max-w-90 kiya hai */}
           <div
             onClick={(e) => e.stopPropagation()}
             className="bg-slate-900/95 border border-white/10 rounded-2xl p-6 md:p-8 w-full max-w-90 text-center shadow-2xl animate-popup"
