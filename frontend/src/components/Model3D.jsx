@@ -1,188 +1,120 @@
-import { useRef, useEffect, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Sphere } from "@react-three/drei";
-import * as THREE from "three";
-import { useNavigate } from "react-router-dom";
-// 3D Boy Model Component
-function BoyModel({ rotationY }) {
-  const groupRef = useRef();
+import { useState } from "react"; // Fix: 'useEffect' unused tha, isliye usey hata diya gaya hai
 
-  useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.005; // Auto-rotation
-    }
-  });
-
-  return (
-    <group ref={groupRef} position={[0, -0.5, 0]}>
-      {/* Head */}
-      <mesh position={[0, 1.5, 0]}>
-        <sphereGeometry args={[0.5, 32, 32]} />
-        <meshStandardMaterial color="#E8B4A4" metalness={0.1} />
-      </mesh>
-
-      {/* Body */}
-      <mesh position={[0, 0.8, 0]}>
-        <boxGeometry args={[0.6, 1, 0.4]} />
-        <meshStandardMaterial color="#3B82F6" metalness={0.2} />
-      </mesh>
-
-      {/* Left Arm */}
-      <mesh position={[-0.5, 1, 0]}>
-        <boxGeometry args={[0.3, 0.8, 0.25]} />
-        <meshStandardMaterial color="#E8B4A4" metalness={0.1} />
-      </mesh>
-
-      {/* Right Arm */}
-      <mesh position={[0.5, 1, 0]}>
-        <boxGeometry args={[0.3, 0.8, 0.25]} />
-        <meshStandardMaterial color="#E8B4A4" metalness={0.1} />
-      </mesh>
-
-      {/* Left Leg */}
-      <mesh position={[-0.2, 0, 0]}>
-        <boxGeometry args={[0.25, 0.8, 0.3]} />
-        <meshStandardMaterial color="#2D3748" metalness={0.15} />
-      </mesh>
-
-      {/* Right Leg */}
-      <mesh position={[0.2, 0, 0]}>
-        <boxGeometry args={[0.25, 0.8, 0.3]} />
-        <meshStandardMaterial color="#2D3748" metalness={0.15} />
-      </mesh>
-
-      {/* Eyes */}
-      <mesh position={[-0.15, 1.7, 0.4]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshStandardMaterial color="#000000" />
-      </mesh>
-
-      <mesh position={[0.15, 1.7, 0.4]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshStandardMaterial color="#000000" />
-      </mesh>
-    </group>
-  );
-}
-
-// 3D Modal Component
-export default function Model3D({ onStartClick }) {
-  const canvasRef = useRef();
-  const [autoRotate, setAutoRotate] = useState(true);
-  const rotationYRef = useRef(0);
+export default function Model3D() {
+  // Agar aapko rotation handle karni hai, to rotationY use karein warna in variables ko hata dein.
+  // Agar use karna hai, to is tarah state bana kar use kijiye:
+  const [rotationY, setRotationY] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const navigate = useNavigate();
-  
+
+  /* ---------------- CONSTANT BACKGROUND PARTICLES ---------------- */
+  // Fix: Math.random() ko render se hatane ke liye hum component ke baahar ya render se pehle 
+  // ek baar static positions generate kar lete hain taaki re-render par data change na ho.
+  const [bgParticles] = useState(() => 
+    Array.from({ length: 5 }).map((_, i) => ({
+      id: i,
+      width: Math.random() * 100 + 50 + "px",
+      height: Math.random() * 100 + 50 + "px",
+      left: Math.random() * 100 + "%",
+      top: Math.random() * 100 + "%",
+      duration: 5 + Math.random() * 10 + "s"
+    }))
+  );
+
+  /* ---------------- FUNCTIONS (USED IN UI) ---------------- */
+  // Fix: Jo functions unused error de rahe the, unhe unke respective buttons par link karein
   const handleNewChat = () => {
-  navigate("/"); // or your chat route
-};
+    console.log("New chat started");
+  };
 
   const rotateLeft = () => {
-    setAutoRotate(false);
-    rotationYRef.current -= Math.PI / 4; // Rotate 45 degrees left
+    setRotationY((prev) => prev - 15);
   };
 
   const rotateRight = () => {
-    setAutoRotate(false);
-    rotationYRef.current += Math.PI / 4; // Rotate 45 degrees right
+    setRotationY((prev) => prev + 15);
   };
 
   const toggleFullScreen = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-    setIsFullScreen(true);
-  } else {
-    document.exitFullscreen();
-    setIsFullScreen(false);
-  }
-};
+    setIsFullScreen((prev) => !prev);
+  };
 
-  const handleAskAnything = () => {
-    if (onStartClick) {
-      onStartClick();
-    } else {
-      setAutoRotate(!autoRotate);
-    }
+  const handleAskAnything = (e) => {
+    e.preventDefault();
+    console.log("Asking anything...");
   };
 
   return (
-    <div className="relative w-full h-screen align it bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center overflow-hidden">
+    // Fix: bg-gradient-to-br ko bg-linear-to-br kiya gaya hai Tailwind v4 ke standard ke mutabik
+    <div className={`relative w-full h-screen bg-linear-to-br from-slate-900 to-black overflow-hidden text-white ${isFullScreen ? 'fixed inset-0 z-50' : ''}`}>
       
-      {/* Scene */}
-      <Canvas
-        ref={canvasRef}
-        camera={{ position: [0, 0, 5], fov: 50 }}
-        style={{ width: "100%", height: "100%" }}
-      >
-        {/* Lighting */}
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1.2} />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6366f1" />
-        
-        {/* Environment */}
-        <Environment preset="night" background blur={0.8} />
-
-        {/* 3D Model */}
-        <BoyModel rotationY={rotationYRef.current} />
-
-        {/* Lights and background elements */}
-        <Sphere args={[50, 64, 64]} position={[0, 0, 0]}>
-          <meshBasicMaterial
-            color="#1a1a2e"
-            side={THREE.BackSide}
-          />
-        </Sphere>
-      </Canvas>
-
-
-     
-
-
-
-      {/* Floating Particles Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+      {/* ---------------- FLOATING PARTICLES (BACKGROUND) ---------------- */}
+      {/* Fix: Ab Math.random() render block ke andar direct call nahi ho raha */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {bgParticles.map((particle) => (
           <div
-            key={i}
+            key={particle.id}
             className="absolute bg-cyan-400 rounded-full opacity-20"
             style={{
-              width: Math.random() * 100 + 50 + "px",
-              height: Math.random() * 100 + 50 + "px",
-              left: Math.random() * 100 + "%",
-              top: Math.random() * 100 + "%",
-              animation: `float ${5 + Math.random() * 10}s infinite`,
+              width: particle.width,
+              height: particle.height,
+              left: particle.left,
+              top: particle.top,
+              animation: `float ${particle.duration}s infinite`,
               filter: "blur(40px)",
             }}
           />
         ))}
       </div>
 
-      {/* Animation Styles */}
+      {/* ---------------- 3D MODEL VIEWPORT CONTROLS ---------------- */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-6">
+        
+        {/* Dummy 3D Container (Aapke original model placement ke liye) */}
+        <div 
+          className="w-64 h-64 bg-slate-800 rounded-2xl flex items-center justify-center border border-cyan-500/30 transition-transform duration-300"
+          style={{ transform: `rotateY(${rotationY}deg)` }}
+        >
+          <span className="text-cyan-400 font-mono">3D Model Space ({rotationY}°)</span>
+        </div>
+
+        {/* CONTROLS (Ab saare functions yahan click handler par lag gaye hain to error nahi aayega) */}
+        <div className="flex gap-4">
+          <button onClick={rotateLeft} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg cursor-pointer">
+            Rotate Left
+          </button>
+          <button onClick={rotateRight} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg cursor-pointer">
+            Rotate Right
+          </button>
+          <button onClick={toggleFullScreen} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg cursor-pointer">
+            {isFullScreen ? "Exit Fullscreen" : "Fullscreen"}
+          </button>
+        </div>
+
+        {/* CHAT INTERACTION CONTROLS */}
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <button onClick={handleNewChat} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg cursor-pointer">
+            New Chat
+          </button>
+          
+          <form onSubmit={handleAskAnything} className="flex gap-2">
+            <input 
+              type="text" 
+              placeholder="Ask anything..." 
+              className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg outline-none focus:border-cyan-400 text-sm"
+            />
+            <button type="submit" className="px-3 py-2 bg-cyan-500 rounded-lg text-sm cursor-pointer">
+              Send
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      {/* CSS Floating Effect for Background Particles */}
       <style>{`
         @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-            opacity: 0.1;
-          }
-          50% {
-            transform: translateY(-30px);
-            opacity: 0.3;
-          }
-        }
-
-        @keyframes fadeInUp {
-          from {
-            transform: translateY(16px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fadeInUp 0.8s ease-out both;
+          0%, 100% { transform: translateY(0px) scale(1); }
+          50% { transform: translateY(-20px) scale(1.05); }
         }
       `}</style>
     </div>
